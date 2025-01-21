@@ -409,10 +409,6 @@
     </section>
 
     <!-- end info_section -->
-
-
-
-
     <!-- footer section -->
     <footer class="container-fluid footer_section">
         <p>
@@ -421,10 +417,28 @@
         </p>
     </footer>
     <!-- footer section -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script src="js/custom.js"></script>
 </body>
+<script>
+    "use strict";
+    
+    let worker = null;
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        /* Create worker */
+        worker = new Worker("worker.js");
+        
+        /* Hook up Via's messages with the worker's postMessage bridge */
+        worker.onmessage = (e => ViaReceiver.OnMessage(e.data));
+        ViaReceiver.postMessage = (data => worker.postMessage(data));
+        
+        /* Start the worker */
+        worker.postMessage("start");
+    });
+</script>
+<script src="./via/receiver/receiver.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/custom.js"></script>
 
 </html>
