@@ -1,7 +1,7 @@
-
-// document.addEventListener("load", function () {
+document.addEventListener("DOMContentLoaded", function () {
     var year = new Date().getFullYear();
     document.querySelector("#currentYear").innerHTML = year;
+    
     var slideWrapper = $(".main-slider");
     slideWrapper.slick({
         // fade:true,
@@ -14,4 +14,4 @@
         dots: true,
         cssEase: "cubic-bezier(0.87, 0.03, 0.41, 0.9)"
     });
-// });
+});
