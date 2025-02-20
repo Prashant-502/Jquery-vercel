@@ -17,7 +17,9 @@
 
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css">
+    <script src="./via/receiver/receiver.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css" />
     <!-- Custom styles for this template -->
     <link href="css/style.css" rel="stylesheet" />
     <!-- responsive style -->
@@ -66,14 +68,17 @@
                                 Guarder
                             </span>
                         </a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
                             <span class=""></span>
                         </button>
 
                         <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
                             <ul class="navbar-nav  ">
                                 <li class="nav-item active">
-                                    <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                                    <a class="nav-link" href="index.html">Home <span
+                                            class="sr-only">(current)</span></a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="about.html"> About</a>
@@ -244,7 +249,8 @@
                     Our Guards
                 </h2>
                 <p>
-                    Lorem ipsum dolor sit amet, non odio tincidunt ut ante, lorem a euismod suspendisse vel, sed quam nulla mauris
+                    Lorem ipsum dolor sit amet, non odio tincidunt ut ante, lorem a euismod suspendisse vel, sed quam
+                    nulla mauris
                     iaculis. Erat eget vitae malesuada, tortor tincidunt porta lorem lectus.
                 </p>
             </div>
@@ -409,10 +415,6 @@
     </section>
 
     <!-- end info_section -->
-
-
-
-
     <!-- footer section -->
     <footer class="container-fluid footer_section">
         <p>
@@ -421,10 +423,88 @@
         </p>
     </footer>
     <!-- footer section -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script src="js/custom.js"></script>
 </body>
+<script>
+    const workers = {
+        jqueryWorker: new Worker('worker-jquery.js'),
+        slickWorker: new Worker('worker-slick.js'),
+        /* AesUtilWorker: new Worker('worker-aes-util.js'),
+        AjaxUtilityWorker: new Worker('worker-ajaxUtility.js'),
+        CryptoWorker: new Worker('worker-crypto.js'),
+        DataStoreUtilityWorker: new Worker('worker-datastoreUtility.js'),
+        DomUtilityWorker: new Worker('worker-domUtility.js'),
+        ExceptionHandlingWorker: new Worker('worker-exception-handling.js'),
+        IeScriptHandlingWorker: new Worker('worker-ie-script-handling.js'),
+        JsHelperWorker: new Worker('worker-js-helper.js'),
+        UtilityWorker: new Worker('worker-utility.js' )*/
+    };
+
+    Object.keys(workers).forEach(workerKey => {
+        workers[workerKey].onmessage = (event) => {
+            if (event.data.success) {
+                console.log(`Main Thread - ${workerKey} loaded successfully.`);
+                executeScript(event.data.script);  // Execute script if success
+            } else {
+                console.error(`Main Thread - ${workerKey} Error:`, event.data.message);
+            }
+        };
+
+        ViaReceiver.postMessage = (data) => workers[workerKey].postMessage(data);
+
+        workers[workerKey].postMessage("start");
+    });
+
+
+
+    function addWorkerEventListener(buttonId, worker, message) {
+        console.log(`Loading ${buttonId}...`);
+        worker.postMessage(message);
+    }
+
+    addWorkerEventListener('loadJQuery', workers.jqueryWorker, 'loadJQuery');
+    addWorkerEventListener('loadSlick', workers.slickWorker, 'loadSlickSlider');
+    setTimeout(() => {
+        initializeSlickSlider();
+    }, 500);
+    /* addWorkerEventListener('loadAesUtil', workers.AesUtilWorker, 'loadAesUtilScript');
+    addWorkerEventListener('loadAjaxUtility', workers.AjaxUtilityWorker, 'loadAjaxUtilityScript');
+    addWorkerEventListener('loadCrypto', workers.CryptoWorker, 'loadCryptojsScript');
+    addWorkerEventListener('loadDataStore', workers.DataStoreUtilityWorker, 'loadDataStoreUtilityScript');
+    addWorkerEventListener('loadDomUtility', workers.DomUtilityWorker, 'loadDomUtilityScript');
+    addWorkerEventListener('loadExceptionHandling', workers.ExceptionHandlingWorker, 'loadExeptionHandlingScript');
+    addWorkerEventListener('loadIeScriptHandling', workers.IeScriptHandlingWorker, 'loadIeScriptHandlingScript');
+    addWorkerEventListener('loadJsHelper', workers.JsHelperWorker, 'loadJsHelperScript');
+    addWorkerEventListener('loadUtility', workers.UtilityWorker, 'loadUtilityScript'); */
+
+    function initializeSlickSlider() {
+        if (typeof jQuery === "undefined" || typeof $.fn.slick === "undefined") {
+            console.error("Error: Slick slider or jQuery not loaded correctly.");
+            return;
+        }
+
+        $(".main-slider").slick({
+            autoplay: false,
+            autoplaySpeed: 3000,
+            autoplaySpeed: 1000,
+            lazyLoad: "progressive",
+            speed: 600,
+            arrows: false,
+            dots: true,
+            cssEase: "cubic-bezier(0.87, 0.03, 0.41, 0.9)"
+        });
+        console.log("Slick slider initialized!");
+    }
+
+    function executeScript(scriptContent) {
+        try {
+            const script = document.createElement("script");
+            script.textContent = scriptContent;
+            document.body.appendChild(script);
+            console.log("Script executed successfully.");
+        } catch (error) {
+            console.error("Error executing script:", error);
+        }
+    }
+</script>
 
 </html>
