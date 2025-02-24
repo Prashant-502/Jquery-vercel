@@ -17,7 +17,6 @@
 
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
-    <script src="./via/receiver/receiver.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css" />
     <!-- Custom styles for this template -->
@@ -424,19 +423,11 @@
     </footer>
     <!-- footer section -->
 </body>
+<script src="./via/receiver/receiver.js"></script>
 <script>
     const workers = {
         jqueryWorker: new Worker('worker-jquery.js'),
-        slickWorker: new Worker('worker-slick.js'),
-        /* AesUtilWorker: new Worker('worker-aes-util.js'),
-        AjaxUtilityWorker: new Worker('worker-ajaxUtility.js'),
-        CryptoWorker: new Worker('worker-crypto.js'),
-        DataStoreUtilityWorker: new Worker('worker-datastoreUtility.js'),
-        DomUtilityWorker: new Worker('worker-domUtility.js'),
-        ExceptionHandlingWorker: new Worker('worker-exception-handling.js'),
-        IeScriptHandlingWorker: new Worker('worker-ie-script-handling.js'),
-        JsHelperWorker: new Worker('worker-js-helper.js'),
-        UtilityWorker: new Worker('worker-utility.js' )*/
+        slickWorker: new Worker('worker-slick.js')
     };
 
     Object.keys(workers).forEach(workerKey => {
@@ -454,8 +445,6 @@
         workers[workerKey].postMessage("start");
     });
 
-
-
     function addWorkerEventListener(buttonId, worker, message) {
         console.log(`Loading ${buttonId}...`);
         worker.postMessage(message);
@@ -465,16 +454,7 @@
     addWorkerEventListener('loadSlick', workers.slickWorker, 'loadSlickSlider');
     setTimeout(() => {
         initializeSlickSlider();
-    }, 200);
-    /* addWorkerEventListener('loadAesUtil', workers.AesUtilWorker, 'loadAesUtilScript');
-    addWorkerEventListener('loadAjaxUtility', workers.AjaxUtilityWorker, 'loadAjaxUtilityScript');
-    addWorkerEventListener('loadCrypto', workers.CryptoWorker, 'loadCryptojsScript');
-    addWorkerEventListener('loadDataStore', workers.DataStoreUtilityWorker, 'loadDataStoreUtilityScript');
-    addWorkerEventListener('loadDomUtility', workers.DomUtilityWorker, 'loadDomUtilityScript');
-    addWorkerEventListener('loadExceptionHandling', workers.ExceptionHandlingWorker, 'loadExeptionHandlingScript');
-    addWorkerEventListener('loadIeScriptHandling', workers.IeScriptHandlingWorker, 'loadIeScriptHandlingScript');
-    addWorkerEventListener('loadJsHelper', workers.JsHelperWorker, 'loadJsHelperScript');
-    addWorkerEventListener('loadUtility', workers.UtilityWorker, 'loadUtilityScript'); */
+    }, 1000);
 
     function initializeSlickSlider() {
         if (typeof jQuery === "undefined" || typeof $.fn.slick === "undefined") {
