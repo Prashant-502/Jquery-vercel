@@ -64,6 +64,11 @@
 }
 
 @media (max-width: 576px) {
+  .hero_area .main-slider {
+    max-height: 600px;
+    overflow: hidden;
+  }
+
   .header_top a span {
     display: none;
   }
@@ -72,13 +77,15 @@
     font-size: 2.5rem;
     line-height: 55px;
   }
+
   .slick-initialized .slick-slide {
     margin: auto;
     height: 600px;
     text-align: center;
     padding-top: 100px;
   }
-  .header_top{
+
+  .header_top {
     padding: 0;
   }
 }
