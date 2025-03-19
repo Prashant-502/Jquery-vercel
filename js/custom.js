@@ -1,7 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const observer = lozad(); // lazy loads elements with default selector as '.lozad'
+    observer.observe();
+
     var year = new Date().getFullYear();
     document.querySelector("#currentYear").innerHTML = year;
-    
+
     var slideWrapper = $(".main-slider");
     slideWrapper.slick({
         // fade:true,
